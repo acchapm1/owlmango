@@ -5,11 +5,11 @@ set -euo pipefail
 # Installs git, clones (or updates) the repo, then runs the local installer.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/brochapman/owlmango/main/install/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/acchapm1/owlmango/main/install/install.sh | bash
 #   curl -fsSL ... | bash -s -- --cli-only --no-root
 #   bash install/install.sh --fingerprint
 
-REPO_URL="${DOTFILES_REPO_URL:-https://github.com/brochapman/owlmango}"
+REPO_URL="${DOTFILES_REPO_URL:-https://github.com/acchapm1/owlmango}"
 INSTALL_DIR="$HOME/.local/share/owlmango"
 BRANCH="${DOTFILES_BRANCH:-main}"
 

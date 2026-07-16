@@ -25,10 +25,10 @@ Install on a new machine with a single command — installs git, clones the repo
 
 ```bash
 # Full GUI installation
-curl -fsSL https://raw.githubusercontent.com/brochapman/owlmango/main/install/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/acchapm1/owlmango/main/install/install.sh | bash
 
 # CLI-only (servers/headless)
-curl -fsSL https://raw.githubusercontent.com/brochapman/owlmango/main/install/install.sh | bash -s -- --cli-only
+curl -fsSL https://raw.githubusercontent.com/acchapm1/owlmango/main/install/install.sh | bash -s -- --cli-only
 ```
 
 ### Local Installation

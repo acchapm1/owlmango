@@ -5,7 +5,7 @@ set -euo pipefail
 # Connects to a remote host via SSH and installs CLI-only configuration
 
 VERSION="1.0.0"
-REPO_URL="${DOTFILES_REPO_URL:-https://github.com/brochapman/owlmango}"
+REPO_URL="${DOTFILES_REPO_URL:-https://github.com/acchapm1/owlmango}"
 INSTALL_DIR_RELATIVE=".local/share/owlmango"  # Relative to remote user's $HOME
 INSTALL_DIR=""  # Will be set via -d flag or inferred remotely
 
