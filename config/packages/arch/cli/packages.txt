@@ -1,0 +1,37 @@
+# CLI tools and essentials for Arch Linux
+
+# Core utilities
+bat
+btop
+fish
+fzf
+git
+htop
+jq
+mise
+neovim
+openssh
+rsync
+
+# Shells (bash stays the default login shell; these are installed and
+# available to opt into via `exec fish` / `exec nu` or a manual chsh)
+nushell
+
+# Development tools
+docker
+docker-compose
+
+# System utilities
+bluez
+bluez-utils
+dnsmasq
+evtest
+pkgfile
+
+# Fonts (needed for terminal)
+noto-fonts
+noto-fonts-extra
+
+# Security
+gnome-keyring
+libsecret

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=ChatGPT
+Exec=flatpak run org.chromium.Chromium --enable-features=WebUIDarkMode --force-dark-mode --user-data-dir=$HOME/.local/share/webapps/chatgpt --app=https://chatgpt.com --no-first-run --no-default-browser-check --window-size=1280,900
+Terminal=false
+Categories=Network;WebBrowser;
+StartupWMClass=ChatGPT
+Icon=chatgpt

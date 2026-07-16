@@ -1,0 +1,84 @@
+#!/usr/bin/env fish
+# UPower AC/battery switch daemon.
+# Runs hooks in ~/.config/upower/ac.d/ and ~/.config/upower/battery.d/
+
+# Run inside a transient systemd scope when available
+if not set -q UPOWER_DAEMON_IN_SCOPE; and command -q systemd-run
+    set -gx UPOWER_DAEMON_IN_SCOPE 1
+    exec systemd-run --user --scope --quiet --collect \
+        --property=KillMode=control-group \
+        --property=SendSIGHUP=yes \
+        (status filename) $argv
+end
+
+set -q UPOWER_LOG_DIR; or set UPOWER_LOG_DIR $HOME/.var/log
+set -q UPOWER_LOG_FILE; or set UPOWER_LOG_FILE $UPOWER_LOG_DIR/upower-daemon.log
+
+mkdir -p $UPOWER_LOG_DIR
+touch $UPOWER_LOG_FILE 2>/dev/null; or true
+
+exec >>$UPOWER_LOG_FILE 2>&1
+
+function log
+    printf '%s %s\n' (date '+%Y-%m-%d %H:%M:%S') "$argv"
+end
+
+function pick_ac_device
+    if upower -e 2>/dev/null | grep -qx '/org/freedesktop/UPower/devices/line_power_ACAD'
+        echo '/org/freedesktop/UPower/devices/line_power_ACAD'
+        return 0
+    end
+    upower -e 2>/dev/null | awk '/\/org\/freedesktop\/UPower\/devices\/line_power_/ {print; exit 0}'
+end
+
+function get_online
+    upower -i $AC_DEV 2>/dev/null | awk -F: '/online:/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2; exit}'
+end
+
+function run_dir -a dir
+    test -d $dir; or return 0
+    for f in $dir/*
+        test -f $f; and test -x $f; or continue
+        log "hook start: $f"
+        if $f
+            log "hook ok: $f"
+        else
+            log "hook fail: $f"
+        end
+    end
+end
+
+function run_for_state -a online
+    log "ac online=$online dev=$AC_DEV"
+    if test "$online" = "yes"
+        run_dir $HOOKS_ROOT/ac.d
+    else
+        run_dir $HOOKS_ROOT/battery.d
+    end
+end
+
+set -q UPOWER_HOOKS_ROOT; or set UPOWER_HOOKS_ROOT $HOME/.config/upower
+set -g HOOKS_ROOT $UPOWER_HOOKS_ROOT
+set -q UPOWER_LINE_POWER; or set UPOWER_LINE_POWER (pick_ac_device)
+set -g AC_DEV $UPOWER_LINE_POWER
+
+if test -z "$AC_DEV"
+    log "no AC device found; exiting"
+    exit 0
+end
+
+log "started hooks_root=$HOOKS_ROOT"
+
+set -g last_online (get_online)
+run_for_state $last_online
+
+# Monitor for changes
+upower -m 2>/dev/null | while read -l line
+    if string match -q "*$AC_DEV*" $line
+        set cur_online (get_online)
+        if test "$cur_online" != "$last_online"
+            set -g last_online $cur_online
+            run_for_state $cur_online
+        end
+    end
+end

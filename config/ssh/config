@@ -1,0 +1,22 @@
+# OpenSSH client configuration.
+# This file is intended to be included from ~/.ssh/config.
+
+Host *
+  ForwardAgent yes
+  SetEnv TERM=xterm-256color
+  ControlMaster auto
+  ControlPath /tmp/ssh-%r@%h:%p
+  ControlPersist 5m
+  IdentityFile ~/.ssh/id_ed25519
+  ServerAliveInterval 20
+
+Match all
+  Include ~/.ssh/config.d/*.conf
+  Include ~/.config/ssh/config.d/*.conf
+  Include ~/.config/secrets/ssh/config
+  Include ~/.config/secrets/ssh/config.d/*.conf
+
+# Local machine-specific overrides and secrets (not in repo)
+Include ~/.ssh/config.local
+Include ~/.config/secrets/ssh/config
+Include ~/.config/secrets/ssh/config.d/*.conf

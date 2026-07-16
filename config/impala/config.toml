@@ -1,0 +1,9 @@
+# impala config
+# Note: impala currently only exposes keybinding configuration.
+# It uses your terminal colors for its UI, so launching it in Ghostty makes it
+# match the Adwaita Pastel Dark theme automatically.
+
+mode = "station"
+
+# Set to true to enable Esc key to quit the app
+esc_quit = true

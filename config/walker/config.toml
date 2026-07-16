@@ -1,0 +1,21 @@
+# Walker configuration
+# Theme: Adwaita Pastel Dark
+
+theme = "adwaita-pastel-dark"
+
+[activation_mode]
+disabled = false
+
+[list]
+height = 400
+width = 600
+
+[runner]
+# Shell to use for command execution
+shell = "/usr/bin/fish"
+
+[applications]
+# Enable application launching
+actions = true
+# Sort by usage frequency
+sort_by_usage = true

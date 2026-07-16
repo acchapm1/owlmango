@@ -1,0 +1,55 @@
+# Ghostty config
+# Theme intent: Adwaita Pastel Dark, ported from this repo's former Alacritty
+# palette so the look carries over to owlmango.
+# Reference: https://ghostty.org/docs/config
+
+# Font
+font-family = "Adwaita Mono"
+font-size = 13
+
+# Window
+window-padding-x = 12
+window-padding-y = 10
+window-decoration = true
+background-opacity = 1.0
+
+# Scrollback
+scrollback-limit = 10000000
+
+# Cursor
+cursor-style = block
+cursor-style-blink = true
+
+# Keybindings — match the GTK-style Ctrl+Shift+C/V used by the old Alacritty setup
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+
+# ── Adwaita Pastel Dark palette ──────────────────────────────────────────────
+background = 1e1e1e
+foreground = ffffff
+
+cursor-color = ffffff
+cursor-text = 1e1e1e
+
+selection-background = 3a5a7a
+selection-foreground = ffffff
+
+# normal
+palette = 0=#241f31
+palette = 1=#c01c28
+palette = 2=#2ec27e
+palette = 3=#f5c211
+palette = 4=#1e78e4
+palette = 5=#a74aa8
+palette = 6=#0ab9dc
+palette = 7=#c0bfbf
+
+# bright
+palette = 8=#5e5c64
+palette = 9=#ed333b
+palette = 10=#57e389
+palette = 11=#f8e45c
+palette = 12=#51a1ff
+palette = 13=#d670e8
+palette = 14=#4fd2fd
+palette = 15=#f6f5f4

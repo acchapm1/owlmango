@@ -1,0 +1,53 @@
+#!/usr/bin/env fish
+
+argparse --name=rotate-video \
+    'a/angle=' \
+    'v/vertical-flip' \
+    'h/horizontal-flip' \
+    'help' \
+    -- $argv
+or exit 1
+
+if set -q _flag_help
+    echo "Usage: rotate-video [OPTIONS] input output"
+    echo ""
+    echo "Options:"
+    echo "  -a, --angle=ANGLE    Rotate by angle (90, 180, 270)"
+    echo "  -v, --vertical-flip  Flip vertically"
+    echo "  -h, --horizontal-flip Flip horizontally"
+    echo "      --help           Show this help"
+    exit 0
+end
+
+set vfoptions ""
+
+if set -q _flag_angle
+    switch $_flag_angle
+        case 90
+            set vfoptions "transpose=1"
+        case 180
+            set vfoptions "transpose=1,transpose=1"
+        case 270
+            set vfoptions "transpose=2"
+    end
+end
+
+if set -q _flag_vertical_flip
+    set vfoptions "vflip"
+end
+
+if set -q _flag_horizontal_flip
+    set vfoptions "hflip"
+end
+
+if test -z "$vfoptions"
+    echo "Error: specify --angle, --vertical-flip, or --horizontal-flip" >&2
+    exit 1
+end
+
+if test (count $argv) -lt 2
+    echo "Error: specify input and output files" >&2
+    exit 1
+end
+
+ffmpeg -i $argv[1] -vf $vfoptions $argv[2]

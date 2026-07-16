@@ -1,0 +1,21 @@
+# Never commit SSH secrets.
+id_*
+*.pem
+*.key
+*.pub
+known_hosts*
+authorized_keys
+allowed_signers
+*.p12
+*.pfx
+
+# Host-specific configs (may contain IPs, hostnames, etc.)
+config.d/*.conf
+config.local
+
+# Some people keep keys under subdirs.
+keys/
+agent/
+runware/
+personal/
+deprecated/

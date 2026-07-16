@@ -1,0 +1,102 @@
+#!/usr/bin/env sh
+set -eu
+
+# Portable installer for this dotfiles repo.
+#
+# Runs every stage in install/stages/ in alphabetical order.
+# Each stage is responsible for its own privilege escalation.
+#
+# Options:
+#   --fingerprint   Enable fingerprint authentication for swaylock
+#   --gaming        Install gaming support (Wine tray icon proxy)
+#   --cli-only      Install only CLI tools (fish, git, etc.) - skip GUI configurations
+#   --no-root       Skip root user customizations (fish, bat, greetd, etc.)
+
+repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+ts=${TS:-$(date +%Y%m%d-%H%M%S)}
+cfg_root=${XDG_CONFIG_HOME:-$HOME/.config}
+flags_dir="$cfg_root/owlmango"
+flags_file="$flags_dir/install.flags"
+
+# Parse flags
+FINGERPRINT=0
+GAMING=0
+CLI_ONLY=0
+NO_ROOT=0
+SHOW_HELP=0
+
+apply_flags() {
+  for arg in "$@"; do
+    case "$arg" in
+      --fingerprint) FINGERPRINT=1 ;;
+      --gaming) GAMING=1 ;;
+      --cli-only) CLI_ONLY=1 ;;
+      --no-root) NO_ROOT=1 ;;
+      --help|-h) SHOW_HELP=1 ;;
+    esac
+  done
+}
+
+load_saved_flags() {
+  if [ ! -f "$flags_file" ]; then
+    return 0
+  fi
+
+  saved_flags=$(awk 'NF {print}' "$flags_file")
+  if [ -z "$saved_flags" ]; then
+    return 0
+  fi
+
+  # shellcheck disable=SC2086
+  apply_flags $saved_flags
+}
+
+load_saved_flags
+apply_flags "$@"
+
+if [ "$SHOW_HELP" = "1" ]; then
+  echo "Usage: $0 [OPTIONS]"
+  echo ""
+  echo "Options:"
+  echo "  --fingerprint   Enable fingerprint authentication for swaylock"
+  echo "  --gaming        Install gaming support (Wine tray icon proxy)"
+  echo "  --cli-only      Install only CLI tools (fish, git, etc.) - skip GUI configurations"
+  echo "  --no-root       Skip root user customizations (fish, bat, greetd, etc.)"
+  exit 0
+fi
+
+state_root=${XDG_STATE_HOME:-$HOME/.local/state}
+backup_root="$state_root/config-backups/$ts"
+
+export REPO_ROOT="$repo_root"
+export TS="$ts"
+export CFG_ROOT="$cfg_root"
+export BACKUP_ROOT="$backup_root"
+export FINGERPRINT
+export GAMING
+export CLI_ONLY
+export NO_ROOT
+
+mkdir -p "$cfg_root" "$backup_root" "$flags_dir"
+
+{
+  [ "$FINGERPRINT" = "1" ] && printf '%s\n' "--fingerprint"
+  [ "$GAMING" = "1" ] && printf '%s\n' "--gaming"
+  [ "$CLI_ONLY" = "1" ] && printf '%s\n' "--cli-only"
+  [ "$NO_ROOT" = "1" ] && printf '%s\n' "--no-root"
+} > "$flags_file"
+
+for stage in "$repo_root"/install/stages/*.sh; do
+  [ -f "$stage" ] || continue
+  stage_name=$(basename "$stage")
+
+  # Skip root customizations if --no-root flag is set
+  if [ "$NO_ROOT" = "1" ] && [ "$stage_name" = "20-root.sh" ]; then
+    printf '%s\n' "skipping root customizations (--no-root flag)"
+    continue
+  fi
+
+  bash "$stage"
+done
+
+printf '%s\n' "install complete"

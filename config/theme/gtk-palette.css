@@ -1,0 +1,20 @@
+/* Adwaita Pastel Dark palette (shared).
+ * GTK CSS file with the shared color tokens for owlmango.
+ */
+
+@define-color adw_bg_color #1e1e1e;
+@define-color adw_surface_color #303030;
+@define-color adw_element_color #444444;
+@define-color adw_border_color #4f4f4f;
+
+@define-color adw_fg_color #ffffff;
+@define-color adw_fg_muted #c7c7c7;
+@define-color adw_fg_placeholder #b3b3b3;
+
+@define-color adw_accent_color #62a0ea;
+@define-color adw_accent2_color #0ab9dc;
+@define-color adw_accent3_color #c061cb;
+
+@define-color adw_success_color #57e389;
+@define-color adw_warning_color #f5c211;
+@define-color adw_danger_color #ed333b;

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# owlmango — turn off all outputs (DPMS). Mango exposes this via mmsg/wlopm.
+
+if command -v wlopm >/dev/null 2>&1; then
+  wlopm --off '*'
+elif command -v mmsg >/dev/null 2>&1; then
+  mmsg -d dpms_off
+fi

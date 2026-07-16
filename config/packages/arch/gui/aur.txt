@@ -1,0 +1,17 @@
+# AUR GUI packages (require paru or yay)
+
+# Compositor
+mangowm-git
+
+# Launcher stack
+elephant
+elephant-desktopapplications
+walker-bin
+
+# Apps and tools
+beeper-v4-bin
+bluetui
+zen-browser-bin
+ttf-font-awesome-5
+impala
+wiremix

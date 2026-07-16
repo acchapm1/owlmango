@@ -1,0 +1,14 @@
+#!/usr/bin/env fish
+# owlmango — lock screen with swaylock, using fingerprint if a sensor is enrolled.
+
+function has_fingerprint
+    command -q fprintd-list; or return 1
+    fprintd-list $USER 2>/dev/null | grep -q "finger"; or return 1
+    return 0
+end
+
+if has_fingerprint
+    exec swaylock -f --fingerprint
+else
+    exec swaylock -f
+end

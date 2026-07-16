@@ -1,0 +1,27 @@
+#!/usr/bin/env fish
+# Lock the session after N seconds of inactivity, suspend after M seconds.
+# Requires: swayidle and swaylock
+
+set -q LOCK_AFTER; or set LOCK_AFTER 300
+set -q SUSPEND_AFTER; or set SUSPEND_AFTER 900
+
+command -q swayidle; or exit 0
+command -q swaylock; or exit 0
+
+# Auto-detect fingerprint sensor
+function has_fingerprint
+    command -q fprintd-list; or return 1
+    fprintd-list $USER 2>/dev/null | grep -q "finger"; or return 1
+    return 0
+end
+
+set lock_cmd "swaylock -f"
+if has_fingerprint
+    set lock_cmd "swaylock -f --fingerprint"
+end
+
+exec swayidle -w \
+    timeout $LOCK_AFTER $lock_cmd \
+    timeout $SUSPEND_AFTER 'systemctl suspend' \
+    before-sleep $lock_cmd \
+    lock $lock_cmd

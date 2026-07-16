@@ -1,0 +1,41 @@
+ignore-empty-password
+disable-caps-lock-text
+
+# Adwaita Pastel Dark theme
+font=Adwaita Sans
+
+indicator-idle-visible
+indicator-radius=120
+indicator-thickness=20
+
+# Base
+color=1e1e1e
+text-color=ffffff
+layout-text-color=c7c7c7
+
+# Indicator
+ring-color=4f4f4f
+line-color=4f4f4f
+separator-color=4f4f4f
+inside-color=303030
+
+# Highlights
+key-hl-color=8fd3ea
+bs-hl-color=f2a7a7
+
+# State colors
+inside-ver-color=8bd3c7
+ring-ver-color=8bd3c7
+text-ver-color=8bd3c7
+
+inside-wrong-color=f2a7a7
+ring-wrong-color=f2a7a7
+text-wrong-color=f2a7a7
+
+inside-clear-color=9bbcff
+ring-clear-color=9bbcff
+text-clear-color=9bbcff
+
+# Layout box
+layout-bg-color=303030
+layout-border-color=4f4f4f

@@ -1,0 +1,12 @@
+# bluetui config
+# Note: bluetui currently exposes layout/width and keybindings.
+# It uses your terminal colors for its UI, so launching it in Ghostty makes it
+# match the Adwaita Pastel Dark theme automatically.
+
+# Possible values: "Legacy", "Start", "End", "Center", "SpaceAround", "SpaceBetween"
+layout = "SpaceAround"
+
+# Possible values: "auto" or a positive integer
+width = "auto"
+
+esc_quit = true

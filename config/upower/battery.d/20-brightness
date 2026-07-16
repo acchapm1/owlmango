@@ -1,0 +1,6 @@
+#!/usr/bin/env fish
+
+set -q BATTERY_BRIGHTNESS; or set BATTERY_BRIGHTNESS 50%
+
+command -q brightnessctl; or exit 0
+brightnessctl --class=backlight set $BATTERY_BRIGHTNESS >/dev/null 2>&1; or true

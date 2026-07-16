@@ -1,0 +1,9 @@
+# Minimal wiremix overrides (merged with wiremix defaults).
+
+keybindings = [
+  # Exit immediately with Escape.
+  { key = "Esc", action = "Exit" },
+
+  # Esc normally closes dropdowns; keep that behavior on Backspace.
+  { key = "Backspace", action = "CloseDropdown" },
+]

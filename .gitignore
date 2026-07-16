@@ -1,0 +1,18 @@
+.opencode.json
+config/opencode/*
+!config/opencode/opencode.json
+!config/opencode/themes/
+!config/opencode/themes/**
+/.opencode
+/.ai
+AGENTS.md
+
+# Large prebuilt binaries in bin/ are not tracked (inherited from na-distro).
+# Keep the small text helper scripts; drop the compiled tools. Install/run them
+# out of band if you need them.
+bin/ameba-ls
+bin/guardian
+bin/say
+bin/speak-selection
+bin/speakd
+bin/upt

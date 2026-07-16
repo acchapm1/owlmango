@@ -1,0 +1,15 @@
+[Unit]
+Description=Beeper
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=beeper
+Restart=on-failure
+RestartSec=2
+StandardOutput=append:%h/.var/log/beeper.log
+StandardError=append:%h/.var/log/beeper.log
+
+[Install]
+WantedBy=graphical-session.target

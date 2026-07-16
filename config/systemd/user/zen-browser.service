@@ -1,0 +1,13 @@
+[Unit]
+Description=Zen Browser
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=zen-browser
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

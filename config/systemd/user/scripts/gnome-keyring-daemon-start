@@ -1,0 +1,12 @@
+#!/usr/bin/env fish
+# GNOME Keyring daemon wrapper: auto-unlock if key exists.
+# Note: SSH agent is handled separately by gcr-ssh-agent.socket.
+
+set key $HOME/.config/secrets/gnome-keyring.key
+set ctrl (set -q XDG_RUNTIME_DIR; and echo $XDG_RUNTIME_DIR; or echo /run/user/(id -u))/keyring
+
+if test -r $key
+    cat $key | gnome-keyring-daemon --foreground --unlock --components="pkcs11,secrets" --control-directory=$ctrl
+else
+    gnome-keyring-daemon --foreground --components="pkcs11,secrets" --control-directory=$ctrl
+end

@@ -1,0 +1,19 @@
+[Unit]
+Description=GNOME Keyring daemon (auto-unlock)
+Documentation=man:gnome-keyring-daemon(1)
+
+# We start the daemon ourselves; don't also have socket activation on the same control path.
+Conflicts=gnome-keyring-daemon.socket
+
+[Service]
+Type=simple
+StandardError=journal
+
+# If the key exists, unlock at startup (read from stdin).
+ExecStart=%h/.config/systemd/user/scripts/gnome-keyring-daemon-start
+
+Restart=on-failure
+RestartSec=1
+
+[Install]
+WantedBy=default.target

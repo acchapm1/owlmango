@@ -1,0 +1,84 @@
+#!/usr/bin/env fish
+
+argparse --name=pwgen \
+    'c/count=' \
+    'min-word-length=' \
+    'max-word-length=' \
+    'u/uppercase=' \
+    'h/help' \
+    -- $argv
+or exit 1
+
+if set -q _flag_help
+    echo "Usage: pwgen [OPTIONS]"
+    echo ""
+    echo "Generate secure passwords using dictionary words"
+    echo ""
+    echo "Options:"
+    echo "  -c, --count=N              Number of words to generate (default: 5)"
+    echo "      --min-word-length=N    Minimum word length (default: 4)"
+    echo "      --max-word-length=N    Maximum word length (default: 8)"
+    echo "  -u, --uppercase=N          Word index to capitalize (default: 1)"
+    echo "  -h, --help                 Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  pwgen --count 3"
+    echo "  pwgen --min-word-length 6 --max-word-length 10"
+    echo "  pwgen -c 4 --min-word-length 5"
+    echo "  pwgen --uppercase 2        # Capitalize the 2nd word"
+    exit 0
+end
+
+set WORDLIST /usr/share/dict/words
+set count 4
+set minimum_word_length 4
+set maximum_word_length 8
+set uppercase_index 1
+
+if set -q _flag_count
+    set count $_flag_count
+end
+
+if set -q _flag_min_word_length
+    set minimum_word_length $_flag_min_word_length
+end
+
+if set -q _flag_max_word_length
+    set maximum_word_length $_flag_max_word_length
+end
+
+if set -q _flag_uppercase
+    set uppercase_index $_flag_uppercase
+end
+
+if test $minimum_word_length -gt $maximum_word_length
+    echo "Error: minimum word length ($minimum_word_length) cannot be greater than maximum word length ($maximum_word_length)" >&2
+    exit 1
+end
+
+if not math "$count" > /dev/null 2>&1; or test $count -lt 1
+    echo "Error: count must be a positive integer" >&2
+    exit 1
+end
+
+if not math "$uppercase_index" > /dev/null 2>&1; or test $uppercase_index -lt 1
+    echo "Error: uppercase index must be a positive integer" >&2
+    exit 1
+end
+
+set words (grep -E "^[a-z]{$minimum_word_length,$maximum_word_length}"'$' /usr/share/dict/words| shuf -n$count)
+
+# Validate uppercase index is within range
+if test $uppercase_index -gt (count $words)
+    echo "Error: uppercase index ($uppercase_index) cannot be greater than word count ($count)" >&2
+    exit 1
+end
+
+# Capitalize the specified word
+set words[$uppercase_index] (string sub -l 1 $words[$uppercase_index] | string upper)(string sub -s 2 $words[$uppercase_index])
+
+set random_word_index (random 1 (count $words))
+set random_number (random 0 9)
+
+set words[$random_word_index] "$words[$random_word_index]$random_number"
+string join "-" $words

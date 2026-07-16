@@ -1,0 +1,93 @@
+[user]
+	name = Bro Chapman
+	email = brochapman@gmail.com
+  # username =
+  # signingkey =   # set your GPG signing key here to enable signed commits
+[core]
+  editor = nvim
+  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+  excludesfile = ~/.gitignore
+[rerere]
+  enabled = 1
+  autoupdate = 1
+[push]
+  default = matching
+[color]
+  ui = auto
+[color "branch"]
+  # Adwaita Pastel-ish (256color approximations, softer/pastelier)
+  current = 110 bold
+  local = 114
+  remote = 151
+[color "status"]
+  header = 246
+  branch = 110 bold
+  added = 114
+  changed = 180
+  untracked = 174
+  nobranch = 174 bold
+[color "diff"]
+  meta = 246
+  commit = 180
+  frag = 147
+  old = 174
+  new = 114
+  whitespace = 174 reverse
+
+[color "decorate"]
+  HEAD = 174 bold
+  branch = 110 bold
+  remoteBranch = 151
+  tag = 180
+  stash = 147
+
+[alias]
+	st = status
+	co = checkout
+	br = branch
+  cp = cherry-pick
+  sw = switch
+  llm =
+	ci = commit
+
+[cola]
+  spellcheck = true
+  startupmode = list
+	fontdiff = Adwaita Mono,11,-1,5,50,0,0,0,0,0
+
+[diff]
+  tool = meld
+[difftool]
+  prompt = false
+[difftool "meld"]
+  trustExitCode = true
+  cmd = meld "$LOCAL" "$PWD/$REMOTE"
+
+[merge]
+  tool = meld
+
+[mergetool]
+  keepBackup = false
+  prompt = false
+[mergetool "meld"]
+  trustExitCode = true
+  cmd = meld --auto-merge \"$PWD/$LOCAL\" \"$PWD/$BASE\" \"$PWD/$REMOTE\" --output=\"$PWD/$MERGED\"
+
+[diff "enc"]
+  textconv = rails encrypted:show
+  cachetextconv = false
+[init]
+	defaultBranch = master
+[url "https://github.com/"]
+  insteadOf = "git://github.com/"
+[fetch]
+  recurseSubmodules = on-demand
+[commit]
+  # Enable and set user.signingkey above to sign commits.
+  gpgsign = false
+[gui]
+	editor = zeditor
+[pull]
+	rebase = true
+; [maintenance]
+; repo = <local-machine-path>

@@ -1,0 +1,44 @@
+FROM archlinux:latest
+
+# Update system and install all required packages for testing
+RUN pacman -Syu --noconfirm && \
+    pacman -S --noconfirm \
+    # CI essentials
+    fish \
+    git \
+    sudo \
+    base-devel \
+    coreutils \
+    bash \
+    nodejs \
+    # CLI packages (from config/packages/arch/cli/packages.txt)
+    bat \
+    btop \
+    fzf \
+    htop \
+    jq \
+    mise \
+    nushell \
+    openssh \
+    rsync \
+    docker \
+    docker-compose \
+    bluez \
+    bluez-utils \
+    noto-fonts \
+    noto-fonts-extra \
+    gnome-keyring \
+    libsecret \
+    && pacman -Scc --noconfirm
+
+# Create test user with sudo access.
+# owlmango keeps bash as the default login shell (fish/nushell are opt-in).
+RUN useradd -m -G wheel -s /bin/bash testuser && \
+    echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/wheel
+
+# Copy dotfiles and set up directory structure
+COPY --chown=testuser:testuser . /home/testuser/dotfiles
+RUN rm -rf /home/testuser/dotfiles/config/packages
+
+WORKDIR /home/testuser/dotfiles
+USER testuser

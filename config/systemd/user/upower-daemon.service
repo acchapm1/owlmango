@@ -1,0 +1,14 @@
+[Unit]
+Description=UPower hook daemon
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionPathExistsGlob=/sys/class/power_supply/BAT*
+
+[Service]
+Type=simple
+ExecStart=%h/.config/upower/daemon
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

@@ -1,0 +1,50 @@
+# owlmango — Wayle shell configuration
+#
+# This is the wayle-mango fork, which adds the `mango-workspaces` bar module
+# and MangoWM window-title / compositor detection. Docs: https://wayle.app
+#
+# Every field has a default — this file only sets what owlmango changes.
+# Edits hot-reload on save.
+
+[general]
+
+[bar]
+location = "top"
+scale = 1.0
+
+# Top bar for every monitor.
+[[bar.layout]]
+monitor = "*"
+left = ["dashboard", "mango-workspaces", "window-title"]
+center = ["clock"]
+right = ["media", "systray", "volume", "network", "bluetooth", "battery", "notifications", "power"]
+
+# ── Styling ──────────────────────────────────────────────────────────────────
+# Wayle's own theme engine (not matugen/pywal), so module color tokens are
+# respected. Adwaita Pastel Dark accent (#62a0ea blue).
+[styling]
+theme-provider = "wayle"
+rounding = "md"
+
+[styling.palette]
+primary = "#62a0ea"
+red = "#ed333b"
+yellow = "#f5c211"
+green = "#2ec27e"
+blue = "#1e78e4"
+
+# ── Modules ──────────────────────────────────────────────────────────────────
+[modules.clock]
+format = "%a %d %b  %H:%M"
+
+[modules.mango-workspaces]
+display-mode = "label"
+active-indicator = "background"
+monitor-specific = true
+
+# ── OSD ──────────────────────────────────────────────────────────────────────
+[osd]
+
+# ── Wallpaper ────────────────────────────────────────────────────────────────
+# Mango's autostart also sets a swaybg fallback; let Wayle own it if preferred.
+[wallpaper]

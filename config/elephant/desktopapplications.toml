@@ -1,0 +1,29 @@
+launch_prefix = "~/.config/elephant/spawn-wrapper.fish"
+
+# Blacklist desktop files from being parsed (regexp patterns).
+# Note: patterns match against filename WITHOUT .desktop extension
+# Examples:
+#   - "^nvim$" - exact match for nvim.desktop
+#   - ".*-wayland$" - any file ending with -wayland.desktop
+#   - "^org\\.gnome\\..*" - all GNOME apps
+blacklist = [
+  "^avahi",
+  "^bssh$",
+  "^bvnc$",
+  "^kvantummanager$",
+  "^micro$",
+  "^qv4l2$",
+  "^qvidcap$",
+  "^qt5ct$",
+  "^xgps$",
+  "^xgpsspeed$",
+  "^vim$",
+  "^nvim$",
+  "^git",
+]
+
+# Show application actions like "New Private Window"
+show_actions = false
+
+# Use history for sorting results
+history = true

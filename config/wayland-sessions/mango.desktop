@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Mango
+Comment=A fast, feature-rich Wayland compositor built on dwl
+Exec=mango
+TryExec=mango
+Type=Application
+DesktopNames=mango

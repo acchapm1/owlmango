@@ -1,0 +1,71 @@
+# GUI applications and Wayland tools for Arch Linux
+#
+# The Mango compositor (mangowm-git) and the Wayle shell are installed
+# separately: Mango via AUR (config/packages/arch/gui/aur.txt) and Wayle
+# built from source (see install/stages/00-system.sh). This file lists the
+# repo packages that support them.
+
+# Theming
+adwaita-qt5
+adwaita-qt6
+adwaita-fonts
+otf-font-awesome
+papirus-icon-theme
+qgnomeplatform-qt5
+qgnomeplatform-qt6
+qt5ct
+qt6ct
+
+# Session / login
+greetd
+uwsm
+
+# Terminal
+ghostty
+
+# Editor
+neovim
+
+# Wayland utilities
+brightnessctl
+grim
+playerctl
+slurp
+swayidle
+swaylock
+swaybg
+wl-clipboard
+
+# Wayle build + runtime dependencies (GTK4 shell in Rust)
+# Build deps: rustup provides the toolchain; the rest are system libraries.
+rustup
+clang
+base-devel
+gtk4
+gtk4-layer-shell
+gtksourceview5
+libpulse
+fftw
+pipewire
+wireplumber
+pipewire-pulse
+networkmanager
+
+# Desktop portals
+xdg-desktop-portal
+xdg-desktop-portal-gnome
+xdg-desktop-portal-gtk
+xdg-desktop-portal-wlr
+xorg-xwayland
+xwayland-satellite
+
+# GUI applications
+evince
+loupe
+sushi
+celluloid
+
+# System services
+polkit-kde-agent
+power-profiles-daemon
+upower

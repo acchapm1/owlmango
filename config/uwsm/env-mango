@@ -1,0 +1,6 @@
+# Mango-specific environment variables
+# Sourced by uwsm environment preloader for mango sessions (optional — owlmango
+# launches Mango directly via greetd, but this is here for uwsm users).
+
+# Export Mango's IPC signature to dbus/systemd if it is set.
+export UWSM_FINALIZE_VARNAMES="${UWSM_FINALIZE_VARNAMES:-} MANGO_INSTANCE_SIGNATURE"

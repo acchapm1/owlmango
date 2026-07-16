@@ -1,0 +1,62 @@
+[
+  {
+    "bindings": {
+      "ctrl-shift-l": [
+        "task::Spawn",
+        {
+          "task_name": "Guard",
+        },
+      ],
+      "alt-left": "workspace::ActivatePaneLeft",
+      "alt-right": "workspace::ActivatePaneRight",
+      "alt-up": "workspace::ActivatePaneUp",
+      "alt-down": "workspace::ActivatePaneDown",
+      "ctrl-q": "workspace::CloseWindow",
+    },
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "ctrl-w": "pane::CloseActiveItem",
+    },
+  },
+  {
+    "context": "vim_mode == insert",
+    "bindings": {
+      "ctrl-w": "pane::CloseActiveItem",
+    },
+  },
+  {
+    "context": "ContextEditor > Editor",
+    "bindings": {
+      "ctrl-enter": ["workspace::SendKeystrokes", "escape shift-enter"],
+      "enter": "assistant::Assist",
+    },
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl+shift+\\": "pane::SplitRight",
+    },
+  },
+  {
+    "context": "!Terminal",
+    "bindings": {
+      "ctrl-shift-c": "editor::Copy",
+      "ctrl-shift-v": "editor::Paste",
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-shift-t": "workspace::NewTerminal",
+      "ctrl-s": "workspace::Save",
+    },
+  },
+  {
+    "context": "vim_mode == insert",
+    "bindings": {
+      "ctrl-s": "workspace::Save",
+    },
+  },
+]

@@ -1,0 +1,27 @@
+#!/usr/bin/env fish
+# owlmango — screenshot picker (grim + slurp) driven by walker as a dmenu.
+
+set SHOT_DIR $HOME/Pictures/Screenshots
+mkdir -p $SHOT_DIR
+
+set options "Select Area" "Full Screen"
+set count (count $options)
+set height (math "$count * 48 + 16")
+
+set choice (printf '%s\n' $options | walker --dmenu --nosearch --width 400 --maxheight $height; or true)
+
+set filename $SHOT_DIR/screenshot-(date +%Y-%m-%d-%H-%M-%S).png
+
+switch $choice
+    case "Select Area"
+        set geometry (slurp; or true)
+        test -n "$geometry"; or exit 0
+        grim -g "$geometry" $filename
+    case "Full Screen"
+        grim $filename
+    case '*'
+        exit 0
+end
+
+test -f $filename; and wl-copy < $filename
+test -f $filename; and notify-send -t 3000 "Screenshot saved" "$filename"

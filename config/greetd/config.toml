@@ -1,0 +1,12 @@
+# Greetd configuration for Mango autologin.
+# Installed to /etc/greetd/config.toml by the installer, which substitutes
+# _USER_ with the login user.
+
+[terminal]
+# The VT to run on. Can be "next", "current" or a number.
+vt = 1
+
+[default_session]
+# Autologin straight into the Mango compositor.
+command = "mango"
+user = "_USER_"

@@ -1,0 +1,60 @@
+# btop theme: Adwaita Pastel Dark
+# Inspired by Zed "Adwaita Pastel" and the palette used across this repo.
+
+theme[main_bg]="#1e1e1e"
+theme[main_fg]="#deddda"
+theme[title]="#ffffff"
+
+theme[hi_fg]="#0ab9dc"
+
+# Selection
+theme[selected_bg]="#0ab9dc"
+theme[selected_fg]="#ffffff"
+
+theme[inactive_fg]="#77767b"
+
+# Process box misc accents
+theme[proc_misc]="#585b70"
+
+# Box outlines/dividers
+theme[cpu_box]="#4f4f4f"
+theme[mem_box]="#4f4f4f"
+theme[net_box]="#4f4f4f"
+theme[proc_box]="#4f4f4f"
+theme[div_line]="#4f4f4f"
+
+# Temperature gradient
+theme[temp_start]="#57e389"
+theme[temp_mid]="#f5c211"
+theme[temp_end]="#ed333b"
+
+# CPU gradient
+theme[cpu_start]="#4fd2fd"
+theme[cpu_mid]="#0ab9dc"
+theme[cpu_end]="#ed333b"
+
+# Mem/Disk meters
+theme[free_start]="#57e389"
+theme[free_mid]="#0ab9dc"
+theme[free_end]="#62a0ea"
+
+theme[cached_start]="#0ab9dc"
+theme[cached_mid]="#f5c211"
+theme[cached_end]="#fab387"
+
+theme[available_start]="#57e389"
+theme[available_mid]="#f5c211"
+theme[available_end]="#fab387"
+
+theme[used_start]="#0ab9dc"
+theme[used_mid]="#fab387"
+theme[used_end]="#ed333b"
+
+# Network
+theme[download_start]="#0ab9dc"
+theme[download_mid]="#0ab9dc"
+theme[download_end]="#62a0ea"
+
+theme[upload_start]="#a6e3a1"
+theme[upload_mid]="#57e389"
+theme[upload_end]="#2ec27e"
