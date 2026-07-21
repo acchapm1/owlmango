@@ -214,7 +214,18 @@ install_pkg_list() {
   set -- $pkg_list
   local pkg_summary="$*"
   if ! install_pkgs "$@"; then
-    log "warning: some ${label} packages failed to install (this may be expected)"
+    # pacman aborts the whole transaction when any one package conflicts under
+    # --noconfirm, which would drop every other package in the list. Retry one
+    # at a time so a single bad package can't sink the rest.
+    log "warning: ${label} batch install failed; retrying packages individually"
+    local failed_pkgs=""
+    for p in "$@"; do
+      install_pkgs "$p" || failed_pkgs="$failed_pkgs $p"
+    done
+    if [ -n "$failed_pkgs" ]; then
+      log "warning: ${label} packages failed to install:$failed_pkgs"
+      log "         see logs in $PKG_LOG_DIR"
+    fi
   fi
   if [ "$PKG_MANAGER" = "pacman" ]; then
     log "installed ${label} packages via $PKG_MANAGER: $pkg_summary"
@@ -431,6 +442,13 @@ install_wayle() {
 ensure_rust_toolchain() {
   if have cargo; then
     return 0
+  fi
+
+  # rustup normally arrives with the GUI package list; install it directly if
+  # that batch failed so the Wayle build doesn't depend on the earlier stage.
+  if ! have rustup; then
+    log "installing rustup for the wayle build"
+    pacman_install rustup || true
   fi
 
   if ! have rustup; then
