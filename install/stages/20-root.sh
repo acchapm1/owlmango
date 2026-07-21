@@ -12,7 +12,7 @@ fi
 
 if [ "$(id -u)" -ne 0 ]; then
   if command -v sudo >/dev/null 2>&1; then
-    exec sudo env REPO_ROOT="$REPO_ROOT" TS="$TS" LOGIN_USER="$USER" FINGERPRINT="${FINGERPRINT:-0}" sh "$REPO_ROOT/install/stages/20-root.sh"
+    exec sudo env REPO_ROOT="$REPO_ROOT" TS="$TS" LOGIN_USER="$USER" FINGERPRINT="${FINGERPRINT:-0}" CLI_ONLY="${CLI_ONLY:-0}" sh "$REPO_ROOT/install/stages/20-root.sh"
   fi
   echo "error: root stage requires sudo" >&2
   exit 1
@@ -176,6 +176,42 @@ configure_dnsmasq() {
   echo "configured dnsmasq for .test"
 }
 
+configure_sshd() {
+  sshd_src="$repo_root/config/ssh/sshd_config.d/20-owlmango.conf"
+  sshd_dst="/etc/ssh/sshd_config.d/20-owlmango.conf"
+  sshd_main="/etc/ssh/sshd_config"
+
+  [ -f "$sshd_src" ] || return 0
+
+  if ! command -v sshd >/dev/null 2>&1; then
+    echo "note: openssh not installed; skipping sshd setup"
+    return 0
+  fi
+
+  mkdir -p /etc/ssh/sshd_config.d
+  if [ -f "$sshd_dst" ]; then
+    mkdir -p "$backup_root/sshd"
+    cp "$sshd_dst" "$backup_root/sshd/20-owlmango.conf" >/dev/null 2>&1 || true
+  fi
+
+  cp "$sshd_src" "$sshd_dst"
+  chmod 644 "$sshd_dst"
+
+  # Stock Arch sshd_config includes sshd_config.d; add the Include for configs
+  # that lack it. It must be the first directive because sshd keeps the first
+  # value it sees for each option.
+  if [ -f "$sshd_main" ] && ! grep -q '^Include /etc/ssh/sshd_config.d' "$sshd_main" 2>/dev/null; then
+    mkdir -p "$backup_root/sshd"
+    cp "$sshd_main" "$backup_root/sshd/sshd_config" >/dev/null 2>&1 || true
+    sed -i '1i Include /etc/ssh/sshd_config.d/*.conf' "$sshd_main"
+  fi
+
+  if command -v systemctl >/dev/null 2>&1; then
+    systemctl enable --now sshd.service >/dev/null 2>&1 || true
+  fi
+  echo "enabled sshd with password authentication"
+}
+
 disable_networkmanager() {
   if command -v systemctl >/dev/null 2>&1; then
     systemctl disable --now NetworkManager.service >/dev/null 2>&1 || true
@@ -247,7 +283,9 @@ fi
 greetd_cfg="/etc/greetd/config.toml"
 greetd_src="$repo_root/config/greetd/config.toml"
 
-if [ -n "$login_user" ] && [ -f "$greetd_src" ]; then
+if [ "${CLI_ONLY:-0}" = "1" ]; then
+  echo "skipping greetd GUI login setup (--cli-only flag)"
+elif [ -n "$login_user" ] && [ -f "$greetd_src" ]; then
   mkdir -p /etc/greetd
 
   if [ -f "$greetd_cfg" ]; then
@@ -262,8 +300,21 @@ if [ -n "$login_user" ] && [ -f "$greetd_src" ]; then
     systemctl disable "$dm.service" >/dev/null 2>&1 || true
   done
 
-  systemctl enable greetd.service >/dev/null 2>&1 || true
-  echo "configured greetd autologin for $login_user"
+  # greetd is pulled in by graphical.target; minimal installs may default to
+  # multi-user.target, which boots to a console login even with greetd enabled.
+  systemctl set-default graphical.target >/dev/null 2>&1 || true
+
+  if systemctl enable greetd.service >/dev/null 2>&1; then
+    echo "configured greetd autologin for $login_user"
+  else
+    echo "warning: failed to enable greetd.service; boot will stop at a console login"
+    echo "         (is the greetd package installed? it is skipped by --cli-only runs)"
+  fi
+
+  if ! command -v mango >/dev/null 2>&1; then
+    echo "warning: mango compositor not found; greetd has nothing to launch"
+    echo "         (mangowm-git installs from the AUR - check the AUR stage output)"
+  fi
 fi
 
 if [ "${FINGERPRINT:-0}" = "1" ]; then
@@ -285,6 +336,7 @@ fi
 # (e.g. `exec fish`), but the login shell is left as bash.
 echo "leaving root login shell as bash (owlmango default)"
 
+configure_sshd
 configure_iwd
 configure_systemd_networkd
 configure_systemd_resolved

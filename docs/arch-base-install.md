@@ -174,18 +174,45 @@ Notes:
   there first when a step reports a warning.
 - The full GUI install builds Wayle from source (Rust); expect the first run
   to take a while and use ~2 GB including build artifacts.
+- The root stage enables `sshd` with password authentication (root logins
+  stay disabled), so the machine is reachable over SSH right after install.
 
 ## Part 4 — Verify
 
 ```bash
 fish --version                          # critical CLI package
 pacman -Q yay-bin                       # AUR helper installed
+systemctl status sshd                   # SSH password login enabled
 yay -Q mangowm-git 2>/dev/null          # GUI: compositor from AUR
 command -v wayle                        # GUI: shell built from source
-systemctl status greetd                 # GUI: login manager
+systemctl is-enabled greetd             # GUI: login manager
+systemctl get-default                   # GUI: should be graphical.target
 ```
 
 ## Troubleshooting
+
+### Boots to a console login instead of Mango
+
+The GUI login is greetd autologin straight into `mango`, configured by the
+root stage (`install/stages/20-root.sh`). A console login after reboot means
+one of these steps didn't happen — check in order:
+
+```bash
+cat ~/.config/owlmango/install.flags   # --cli-only or --no-root saved?
+pacman -Q greetd mangowm-git           # both must be installed
+cat /etc/greetd/config.toml            # autologin config written?
+systemctl is-enabled greetd            # should print "enabled"
+systemctl get-default                  # should print "graphical.target"
+```
+
+- **Saved flags**: `--cli-only` skips the GUI packages and greetd setup;
+  `--no-root` skips the whole root stage. Flags persist across runs — remove
+  the flags file and re-run the installer.
+- **`mangowm-git` missing**: the AUR stage failed (see the yay-bin section
+  above). Fix the AUR helper, then `yay -S mangowm-git` or re-run.
+- **greetd disabled / wrong target**: re-running the installer fixes both, or
+  by hand: `sudo systemctl enable greetd && sudo systemctl set-default
+  graphical.target`.
 
 ### "yay/paru not found" during the AUR stage
 

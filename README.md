@@ -105,6 +105,7 @@ Deploy to a remote server via SSH:
 
 - Docker + docker-compose
 - SSH configuration with hardlinks
+- sshd enabled with password authentication (root login disabled)
 - Gnome Keyring + gcr-ssh-agent
 - Systemd user services
 
