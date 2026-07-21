@@ -137,10 +137,6 @@ install_yay_bin() {
     return 0
   fi
 
-  if pacman_has_pkg yay; then
-    pacman_remove yay || true
-  fi
-
   if ! have git || ! have makepkg; then
     log "note: git or makepkg missing; cannot install yay-bin"
     return 0
@@ -154,8 +150,25 @@ install_yay_bin() {
     return 0
   fi
 
-  if ! (cd "$tmp_dir/yay-bin" && makepkg -si --noconfirm) >/dev/null 2>&1; then
-    log "warning: failed to build/install yay-bin"
+  # Build first, swap after: a failed build must not leave the system without
+  # an AUR helper, so any existing yay package is only removed once the
+  # replacement package has been built successfully.
+  local build_log
+  build_log=$(mktemp "$PKG_LOG_DIR/makepkg-XXXXXX.log" 2>/dev/null || echo "$PKG_LOG_DIR/makepkg-$(date +%Y%m%d-%H%M%S)-$$.log")
+  if ! (cd "$tmp_dir/yay-bin" && makepkg -s --noconfirm) >"$build_log" 2>&1; then
+    log "warning: failed to build yay-bin; see $build_log"
+    rm -rf "$tmp_dir"
+    return 0
+  fi
+
+  # yay-bin conflicts with yay, and `pacman --noconfirm` answers no to the
+  # conflict-removal prompt, so the old package has to go before pacman -U.
+  if pacman_has_pkg yay; then
+    pacman_remove yay || true
+  fi
+
+  if ! run_pkg_cmd pacman sudo pacman -U --noconfirm "$tmp_dir/yay-bin/"*.pkg.tar*; then
+    log "warning: failed to install yay-bin package"
     rm -rf "$tmp_dir"
     return 0
   fi
