@@ -237,6 +237,17 @@ AUR helper — and a manually reinstalled `yay` was removed again on the next
 run. The current installer only swaps `yay` for `yay-bin` after a successful
 build; if yay keeps vanishing, update your clone of this repo.
 
+### "rustup not installed" during the Wayle build
+
+Rust is **not** a prerequisite — the installer installs `rustup` from the GUI
+package list and initializes the stable toolchain itself. This warning means
+the GUI package batch failed earlier (one conflicting package aborts a whole
+`pacman --noconfirm` transaction). The installer now retries failed batches
+one package at a time and installs `rustup` directly before the Wayle build;
+if it still fails, check `/tmp/owlmango-install/pacman-*.log` for the package
+that's conflicting (a pre-existing `rust` package is the usual suspect —
+`sudo pacman -R rust` and re-run).
+
 ### Installer skips all packages ("sudo not found")
 
 Install sudo as root (`pacman -S sudo`), add your user to `wheel`, enable
