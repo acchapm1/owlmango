@@ -237,6 +237,17 @@ AUR helper — and a manually reinstalled `yay` was removed again on the next
 run. The current installer only swaps `yay` for `yay-bin` after a successful
 build; if yay keeps vanishing, update your clone of this repo.
 
+### "error: target not found: <package>" in the pacman logs
+
+A package named in `config/packages/arch/` no longer exists in the Arch repos
+(packages get dropped to the AUR over time — adwaita-qt*/qgnomeplatform-qt*
+went this way). One missing target aborts the entire pacman transaction, so
+everything else in that batch silently fails too, which surfaces later as
+missing greetd (console login) or a Wayle build failing on `gtk4.pc`. The
+installer retries failed batches one package at a time and names the
+stragglers; fix the list by removing the dead name or moving it to
+`config/packages/arch/gui/aur.txt` if it now lives in the AUR.
+
 ### "rustup not installed" during the Wayle build
 
 Rust is **not** a prerequisite — the installer installs `rustup` from the GUI
