@@ -32,7 +32,12 @@ run_pkg_cmd() {
   fi
 
   if [ "$label" = "pacman" ]; then
-    if grep -Eq "nothing to do|up to date -- skipping" "$log_file" 2>/dev/null; then
+    # Up-to-date output only counts as success when pacman reported no real
+    # errors: a failed batch that also contains "up to date -- skipping" lines
+    # (e.g. a "target not found" abort on a partially-installed system) must
+    # stay a failure or the per-package retry never runs.
+    if ! grep -q '^error:' "$log_file" 2>/dev/null && \
+        grep -Eq "nothing to do|up to date -- skipping" "$log_file" 2>/dev/null; then
       return 0
     fi
   fi
@@ -412,6 +417,12 @@ install_wayle() {
     log "warning: cargo unavailable after rustup setup; cannot build wayle"
     return 1
   fi
+
+  # The build needs these system libraries; install them directly so a failed
+  # GUI batch earlier in the run can't sink the build (same self-heal as
+  # rustup in ensure_rust_toolchain).
+  pacman_install gtk4 gtk4-layer-shell gtksourceview5 clang libpulse fftw || \
+    log "warning: could not verify wayle build dependencies; build may fail"
 
   log "building wayle from source ($WAYLE_REPO)"
 

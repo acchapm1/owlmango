@@ -6,13 +6,12 @@
 # repo packages that support them.
 
 # Theming
-adwaita-qt5
-adwaita-qt6
+# adwaita-qt* and qgnomeplatform-qt* were dropped from the Arch repos and now
+# live in the AUR (see aur.txt); listing them here aborts the whole batch with
+# "target not found".
 adwaita-fonts
 otf-font-awesome
 papirus-icon-theme
-qgnomeplatform-qt5
-qgnomeplatform-qt6
 qt5ct
 qt6ct
 

@@ -3,6 +3,14 @@
 # Compositor
 mangowm-git
 
+# Qt theming (moved from the Arch repos to the AUR after upstream deprecation;
+# config/mango/config.conf relies on them via QT_QPA_PLATFORMTHEME=gnome and
+# QT_STYLE_OVERRIDE=Adwaita-Dark)
+adwaita-qt5
+adwaita-qt6
+qgnomeplatform-qt5
+qgnomeplatform-qt6
+
 # Launcher stack
 elephant
 elephant-desktopapplications
