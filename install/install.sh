@@ -109,6 +109,13 @@ clone_or_update() {
   success "Repository updated"
 }
 
+# --- Install prerequisites (yay-bin, rust) ------------------------------------
+
+install_prereqs() {
+  log "Installing prerequisites (yay-bin, rust)..."
+  bash "$INSTALL_DIR/install/prereqs.sh"
+}
+
 # --- Main ---------------------------------------------------------------------
 
 main() {
@@ -117,6 +124,7 @@ main() {
   install_git
   install_neovim
   clone_or_update
+  install_prereqs
 
   log "Running local installer..."
   exec sh "$INSTALL_DIR/install/local" "$@"
